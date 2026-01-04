@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Generator kodu</title>
+<style>
+body {
+  font-family: Arial;
+  background: #111;
+  color: white;
+  text-align: center;
+  padding-top: 50px;
+}
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+#code {
+  font-size: 24px;
+  margin: 20px;
+  letter-spacing: 3px;
+}
+</style>
+</head>
+<body>
+
+<h1>Generator kodu zamówienia</h1>
+
+<div id="code">---</div>
+
+<button onclick="generateCode()">Generuj kod</button>
+<button onclick="sendCode()">Prześlij kod</button>
+
+<script>
+let generatedCode = "";
+
+function generateCode() {
+  generatedCode = "CPM-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+  document.getElementById("code").innerText = generatedCode;
+}
+
+function sendCode() {
+  if (!generatedCode) {
+    alert("Najpierw wygeneruj kod!");
+    return;
+  }
+
+  fetch("https://script.google.com/macros/s/AKfycbxXxwEzt-T2WSyikvxJ44Fpsf_ag8iqWyjI2WrAaGqPcZMeUNd4S_EdrUKFcxyZVXR_TQ/exec", {
+    method: "POST",
+    body: JSON.stringify({ code: generatedCode })
+  })
+  .then(res => res.json())
+  .then(() => alert("Kod zapisany w arkuszu!"))
+  .catch(() => alert("Błąd wysyłania"));
+}
+</script>
+
+</body>
+</html>
